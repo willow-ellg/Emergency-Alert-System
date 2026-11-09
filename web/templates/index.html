@@ -1,0 +1,169 @@
+{{define "content"}}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Emergency Response Hub</h1>
+    <p class="govuk-body-l">Live alerts, official guidance and verified community updates for your area.</p>
+  </div>
+</div>
+
+{{if .Demo}}
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-visually-hidden">Warning</span>
+    This is a prototype using demonstration data. Do not use it to make decisions in a real emergency. Call 999 if there is an immediate risk to life.
+  </strong>
+</div>
+{{end}}
+
+<div id="live-updates" class="govuk-visually-hidden" aria-live="polite"></div>
+
+{{if .Error}}
+<div class="govuk-error-summary" data-module="govuk-error-summary" role="alert" tabindex="-1">
+  <div role="alert">
+    <h2 class="govuk-error-summary__title">There is a problem</h2>
+    <div class="govuk-error-summary__body">
+      <p class="govuk-body">{{.Error}}</p>
+    </div>
+  </div>
+</div>
+{{end}}
+
+{{if .Submitted}}
+<div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="submitted-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title" id="submitted-title">Success</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your report has been sent for checking.</p>
+    <p class="govuk-body">It will appear on this page once an operator has verified it.</p>
+  </div>
+</div>
+{{end}}
+
+<form class="govuk-!-margin-bottom-8" method="get" action="{{.HomeURL}}" id="location-form">
+  <div class="govuk-form-group">
+    <label class="govuk-label govuk-label--m" for="area">Find alerts for your area</label>
+    <div id="area-hint" class="govuk-hint">Enter a town, district or postcode area, or use your current location.</div>
+    <input class="govuk-input govuk-!-width-two-thirds" id="area" name="area" type="search" value="{{.Query.Area}}" aria-describedby="area-hint" autocomplete="postal-code">
+    <input type="hidden" id="lat" name="lat" value="{{.Query.Lat}}">
+    <input type="hidden" id="lon" name="lon" value="{{.Query.Lon}}">
+  </div>
+  <div class="govuk-button-group">
+    <button class="govuk-button" data-module="govuk-button" type="submit">Show alerts</button>
+    <button class="govuk-button govuk-button--secondary" type="button" id="use-location" data-module="govuk-button">Use my current location</button>
+    {{if .Filtered}}<a class="govuk-link" href="{{.HomeURL}}">Clear location filter</a>{{end}}
+  </div>
+  <p class="govuk-body-s govuk-!-margin-bottom-0" id="location-status" role="status" aria-live="polite">We only use your location in your browser to filter alerts. It is not stored.</p>
+</form>
+
+{{if .Top}}
+<div class="govuk-notification-banner app-emergency-banner app-emergency-banner--{{.Top.Severity}}" role="region" aria-labelledby="emergency-banner-title">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title" id="emergency-banner-title">{{.Top.Severity.Label}} alert</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">{{.Top.Title}}</p>
+    <p class="govuk-body">{{.Top.Summary}}</p>
+    <p class="govuk-body govuk-!-margin-bottom-0"><a class="govuk-notification-banner__link" href="#alert-{{.Top.ID}}">Read the guidance</a></p>
+  </div>
+</div>
+{{end}}
+
+<div id="alerts-region">{{template "alerts" .}}</div>
+<div id="reports-region">{{template "reports" .}}</div>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="report-heading">
+  <h2 class="govuk-heading-l" id="report-heading">Report what you can see</h2>
+  <p class="govuk-body">Verified updates help people nearby. Reports are checked by an operator before they appear.</p>
+
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-visually-hidden">Warning</span>
+      Do not use this form to request emergency help. Call 999 if there is an immediate risk to life. Do not include names, contact details or full addresses.
+    </strong>
+  </div>
+
+  <form method="post" action="/reports" id="report-form">
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="report-area">Area</label>
+      <div id="report-area-hint" class="govuk-hint">Town, street or district. Do not include your full address.</div>
+      <input class="govuk-input govuk-!-width-two-thirds" id="report-area" name="area" type="text" aria-describedby="report-area-hint" required maxlength="120" value="{{.Query.Area}}">
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="report-category">What is this about?</label>
+      <select class="govuk-select" id="report-category" name="category">
+        <option value="hazard">Hazard</option>
+        <option value="road">Road</option>
+        <option value="shelter">Shelter</option>
+        <option value="medical">Medical</option>
+        <option value="supplies">Supplies</option>
+        <option value="utility">Utility</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="report-alert">Related alert (optional)</label>
+      <select class="govuk-select" id="report-alert" name="alert_id">
+        <option value="">General update</option>
+        {{range .Alerts}}<option value="{{.ID}}">{{.Title}}</option>{{end}}
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="report-body">What can you see?</label>
+      <div id="report-body-hint" class="govuk-hint">Include useful detail such as road closures, water levels or available shelter. Do not include names or contact details.</div>
+      <textarea class="govuk-textarea" id="report-body" name="body" rows="5" aria-describedby="report-body-hint" required maxlength="1000"></textarea>
+    </div>
+
+    <button class="govuk-button" data-module="govuk-button" type="submit">Send report for checking</button>
+    <p class="govuk-body-s" id="report-status" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="myths-heading">
+  <h2 class="govuk-heading-l" id="myths-heading">Misinformation watch</h2>
+  <p class="govuk-body">Claims we have checked and corrected. Always check the official source before sharing a claim.</p>
+  {{if .Myths}}
+  <dl class="govuk-summary-list">
+    {{range .Myths}}
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Claim</dt>
+      <dd class="govuk-summary-list__value">{{.Claim}}</dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">Correction</dt>
+      <dd class="govuk-summary-list__value">{{.Correction}}<br><span class="govuk-body-s">Source: {{.Source}}</span></dd>
+    </div>
+    {{end}}
+  </dl>
+  {{else}}
+  <p class="govuk-body">There are no corrected claims to show.</p>
+  {{end}}
+</section>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="contacts-heading">
+  <h2 class="govuk-heading-l" id="contacts-heading">Emergency contacts</h2>
+  <ul class="govuk-list">
+    <li>Life-threatening emergency: <a class="govuk-link" href="tel:999">999</a></li>
+    <li>Non-emergency police: <a class="govuk-link" href="tel:101">101</a></li>
+    <li>NHS non-emergency: <a class="govuk-link" href="tel:111">111</a></li>
+    <li>Floodline: <a class="govuk-link" href="tel:03459881188">0345 988 1188</a></li>
+  </ul>
+  <p class="govuk-body-s">These are real public contact numbers. The incident data on this page is fictional.</p>
+</section>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="accessibility-heading">
+  <h2 class="govuk-heading-m" id="accessibility-heading">Accessibility</h2>
+  <div class="govuk-button-group">
+    <button type="button" class="govuk-button govuk-button--secondary" id="toggle-contrast" aria-pressed="false">High contrast mode</button>
+    <button type="button" class="govuk-button govuk-button--secondary" id="toggle-text" aria-pressed="false">Larger text</button>
+  </div>
+  <p class="govuk-body-s">This service uses the GOV.UK Design System. It supports keyboard navigation, screen readers, zoom and reduced motion.</p>
+</section>
+
+<p class="govuk-body-s govuk-!-margin-top-8"><a class="govuk-link" href="/admin">Operator area</a></p>
+{{end}}

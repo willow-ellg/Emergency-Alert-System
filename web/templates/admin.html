@@ -1,0 +1,107 @@
+{{define "content"}}
+<h1 class="govuk-heading-xl">Operator area</h1>
+<p class="govuk-body-l">Publish alerts, moderate community reports and generate the standalone emergency snapshot.</p>
+
+<div class="govuk-inset-text">
+  This is a prototype operator console. It is not connected to the national alerting system. Follow your organisation's emergency publishing process for real incidents.
+</div>
+
+<div class="govuk-form-group">
+  <label class="govuk-label" for="admin-token">Operator token</label>
+  <div id="admin-token-hint" class="govuk-hint">Set with HUB_ADMIN_TOKEN. It is stored only in this browser tab.</div>
+  <input class="govuk-input govuk-!-width-two-thirds" id="admin-token" type="password" autocomplete="off" aria-describedby="admin-token-hint">
+</div>
+<div class="govuk-button-group">
+  <button type="button" class="govuk-button govuk-button--secondary" id="save-token" data-module="govuk-button">Save token</button>
+  <button type="button" class="govuk-button govuk-button--secondary" id="export-snapshot" data-module="govuk-button">Generate emergency snapshot</button>
+</div>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="publish-heading">
+  <h2 class="govuk-heading-l" id="publish-heading">Publish an alert</h2>
+  <form id="alert-form">
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="alert-title">Title</label>
+      <input class="govuk-input" id="alert-title" name="title" type="text" required maxlength="160">
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="alert-severity">Severity</label>
+      <select class="govuk-select" id="alert-severity" name="severity">
+        <option value="critical">Critical - act now</option>
+        <option value="warning">Warning - be prepared</option>
+        <option value="info" selected>Information</option>
+      </select>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="alert-summary">Summary</label>
+      <div id="alert-summary-hint" class="govuk-hint">Plain language. Say what has happened and what people should do.</div>
+      <textarea class="govuk-textarea" id="alert-summary" name="summary" rows="3" aria-describedby="alert-summary-hint" required maxlength="1000"></textarea>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="alert-guidance">Guidance steps</label>
+      <div id="alert-guidance-hint" class="govuk-hint">One step per line. Keep each step short and actionable.</div>
+      <textarea class="govuk-textarea" id="alert-guidance" name="guidance" rows="4" aria-describedby="alert-guidance-hint"></textarea>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="alert-areas">Areas</label>
+      <div id="alert-areas-hint" class="govuk-hint">Comma separated. Leave blank for a national alert.</div>
+      <input class="govuk-input" id="alert-areas" name="areas" type="text" aria-describedby="alert-areas-hint">
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="alert-lat">Latitude</label>
+          <input class="govuk-input" id="alert-lat" name="lat" type="number" step="any" inputmode="decimal">
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="alert-lon">Longitude</label>
+          <input class="govuk-input" id="alert-lon" name="lon" type="number" step="any" inputmode="decimal">
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="alert-radius">Radius (km)</label>
+          <input class="govuk-input" id="alert-radius" name="radius_km" type="number" step="any" min="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="alert-source">Source</label>
+      <input class="govuk-input" id="alert-source" name="source" type="text" value="Emergency Response Hub" required maxlength="120">
+    </div>
+
+    <div class="govuk-form-group">
+      <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+        <div class="govuk-checkboxes__item">
+          <input class="govuk-checkboxes__input" id="alert-active" name="active" type="checkbox" checked>
+          <label class="govuk-label govuk-checkboxes__label" for="alert-active">Active</label>
+        </div>
+      </div>
+    </div>
+
+    <button class="govuk-button" data-module="govuk-button" type="submit">Publish alert</button>
+  </form>
+</section>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="pending-heading">
+  <h2 class="govuk-heading-l" id="pending-heading">Pending community reports</h2>
+  <p class="govuk-body">Approve only reports you can corroborate. Rejected reports are kept for audit.</p>
+  <button type="button" class="govuk-button govuk-button--secondary" id="refresh-reports" data-module="govuk-button">Refresh reports</button>
+  <div id="reports-list" class="govuk-!-margin-top-4"></div>
+</section>
+
+<section class="govuk-!-margin-top-8" aria-labelledby="current-heading">
+  <h2 class="govuk-heading-l" id="current-heading">Current alerts</h2>
+  <button type="button" class="govuk-button govuk-button--secondary" id="refresh-alerts" data-module="govuk-button">Refresh alerts</button>
+  <div id="alerts-list" class="govuk-!-margin-top-4"></div>
+</section>
+
+<p class="govuk-body-s govuk-!-margin-top-8" id="admin-status" role="status" aria-live="polite"></p>
+{{end}}

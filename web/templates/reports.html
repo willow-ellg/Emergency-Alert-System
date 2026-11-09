@@ -1,0 +1,23 @@
+{{define "reports"}}
+<section aria-labelledby="reports-heading" class="govuk-!-margin-top-8">
+  <h2 class="govuk-heading-l" id="reports-heading">Verified community updates</h2>
+  <p class="govuk-body">Updates submitted by the public and checked by an operator. They are not official alerts.</p>
+  {{if .Reports}}
+  <ul class="govuk-list app-report-list">
+    {{range .Reports}}
+    <li class="app-report">
+      <p class="govuk-body govuk-!-margin-bottom-1">
+        <strong class="govuk-!-font-weight-bold">{{.Area}}</strong>
+        <span class="govuk-tag govuk-tag--grey">{{categoryLabel .Category}}</span>
+        {{if .Verified}}<span class="govuk-tag govuk-tag--turquoise">Verified</span>{{end}}
+      </p>
+      <p class="govuk-body">{{.Body}}</p>
+      <p class="govuk-body-s govuk-!-margin-bottom-0">{{timeAgo .CreatedAt}}</p>
+    </li>
+    {{end}}
+  </ul>
+  {{else}}
+  <p class="govuk-body">There are no verified community updates yet.</p>
+  {{end}}
+</section>
+{{end}}

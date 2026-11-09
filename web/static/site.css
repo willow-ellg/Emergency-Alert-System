@@ -1,0 +1,177 @@
+/*
+ * Small application layer on top of the unmodified GOV.UK Frontend stylesheet.
+ * Keep this file short: component look and feel comes from govuk-frontend.
+ */
+
+.app-alert-list {
+  margin-bottom: 30px;
+}
+
+.app-alert-card {
+  border-left-width: 5px;
+}
+
+.app-report-list {
+  border-top: 1px solid #b1b4b6;
+}
+
+.app-report {
+  padding: 15px 0;
+  border-bottom: 1px solid #b1b4b6;
+}
+
+/* Emergency banner variants, using the GOV.UK emergency colour palette. */
+.app-emergency-banner {
+  border-width: 5px;
+}
+
+.app-emergency-banner--critical {
+  border-color: #d4351c;
+  background-color: #d4351c;
+}
+
+.app-emergency-banner--critical .govuk-notification-banner__content {
+  background-color: #d4351c;
+  color: #fff;
+}
+
+.app-emergency-banner--critical .govuk-notification-banner__content .govuk-body,
+.app-emergency-banner--critical .govuk-notification-banner__content .govuk-notification-banner__heading {
+  color: #fff;
+}
+
+.app-emergency-banner--critical .govuk-notification-banner__link {
+  color: #fff;
+}
+
+.app-emergency-banner--warning {
+  border-color: #ffdd00;
+  background-color: #ffdd00;
+}
+
+.app-emergency-banner--warning .govuk-notification-banner__header {
+  border-bottom-color: #0b0c0c;
+}
+
+.app-emergency-banner--warning .govuk-notification-banner__title {
+  color: #0b0c0c;
+}
+
+.app-emergency-banner--warning .govuk-notification-banner__content {
+  background-color: #ffdd00;
+  color: #0b0c0c;
+}
+
+/* Accessibility preferences. */
+html.app-large-text {
+  font-size: 125%;
+}
+
+body.app-high-contrast {
+  background: #000;
+  color: #fff;
+}
+
+body.app-high-contrast .govuk-header,
+body.app-high-contrast .govuk-footer {
+  background: #000;
+  color: #fff;
+  border-color: #fff;
+}
+
+body.app-high-contrast .govuk-header {
+  border-bottom: 1px solid #fff;
+}
+
+body.app-high-contrast .govuk-footer {
+  border-top: 1px solid #fff;
+}
+
+body.app-high-contrast .govuk-link,
+body.app-high-contrast .govuk-footer__link,
+body.app-high-contrast .govuk-notification-banner__link {
+  color: #ffff00;
+}
+
+body.app-high-contrast .govuk-link:focus,
+body.app-high-contrast .govuk-footer__link:focus,
+body.app-high-contrast .govuk-notification-banner__link:focus {
+  color: #000;
+}
+
+body.app-high-contrast .govuk-summary-card,
+body.app-high-contrast .govuk-summary-card__title-wrapper,
+body.app-high-contrast .govuk-summary-card__content,
+body.app-high-contrast .govuk-notification-banner__content,
+body.app-high-contrast .govuk-inset-text,
+body.app-high-contrast .govuk-warning-text {
+  background: #000;
+  color: #fff;
+  border-color: #fff;
+}
+
+body.app-high-contrast .govuk-summary-card__title,
+body.app-high-contrast .govuk-heading-xl,
+body.app-high-contrast .govuk-heading-l,
+body.app-high-contrast .govuk-heading-m,
+body.app-high-contrast .govuk-heading-s,
+body.app-high-contrast .govuk-body,
+body.app-high-contrast .govuk-body-s,
+body.app-high-contrast .govuk-body-l {
+  color: #fff;
+}
+
+body.app-high-contrast .govuk-input,
+body.app-high-contrast .govuk-textarea,
+body.app-high-contrast .govuk-select {
+  background: #000;
+  color: #fff;
+  border-color: #fff;
+}
+
+body.app-high-contrast .govuk-button {
+  background: #ffff00;
+  color: #000;
+  box-shadow: 0 2px 0 #fff;
+}
+
+body.app-high-contrast .govuk-button--secondary {
+  background: #000;
+  color: #ffff00;
+  box-shadow: inset 0 0 0 2px #ffff00;
+}
+
+body.app-high-contrast .govuk-tag {
+  background: #ffff00;
+  color: #000;
+}
+
+body.app-high-contrast .govuk-phase-banner {
+  border-color: #fff;
+}
+
+@media print {
+  .govuk-header,
+  .govuk-footer,
+  .govuk-phase-banner,
+  .govuk-skip-link,
+  .govuk-button,
+  form {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .govuk-summary-card {
+    break-inside: avoid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}

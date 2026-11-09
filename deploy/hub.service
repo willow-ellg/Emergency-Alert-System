@@ -1,0 +1,40 @@
+[Unit]
+Description=Emergency Alert System hub
+Documentation=file:/opt/emergency-alert-system/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=emergency
+Group=emergency
+WorkingDirectory=/opt/emergency-alert-system
+EnvironmentFile=-/etc/emergency-alert-system/hub.env
+ExecStart=/opt/emergency-alert-system/bin/hub \
+  -addr :8080 \
+  -data /var/lib/emergency-alert-system/state.json \
+  -snapshot-dir /var/lib/emergency-alert-system/snapshot \
+  -demo=false \
+  -trust-proxy
+Restart=on-failure
+RestartSec=5s
+StateDirectory=emergency-alert-system
+ReadWritePaths=/var/lib/emergency-alert-system
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

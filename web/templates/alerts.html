@@ -1,0 +1,36 @@
+{{define "alerts"}}
+<section aria-labelledby="alerts-heading" class="govuk-!-margin-top-8">
+  <h2 class="govuk-heading-l" id="alerts-heading">Active alerts{{if .Filtered}} for your area{{end}}</h2>
+  {{if .Alerts}}
+  <div class="app-alert-list">
+    {{range .Alerts}}
+    <article class="govuk-summary-card app-alert-card" id="alert-{{.ID}}">
+      <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title">
+          <span class="govuk-tag govuk-tag--{{severityTag .Severity}} govuk-!-margin-right-2">{{.Severity.Label}}</span>
+          {{.Title}}
+        </h3>
+        <ul class="govuk-summary-card__actions">
+          <li class="govuk-summary-card__action">Updated {{timeAgo .UpdatedAt}}</li>
+        </ul>
+      </div>
+      <div class="govuk-summary-card__content">
+        <p class="govuk-body">{{.Summary}}</p>
+        {{if .Areas}}<p class="govuk-body-s"><strong class="govuk-!-font-weight-bold">Areas:</strong> {{join .Areas ", "}}</p>{{end}}
+        {{if .HasDistance}}<p class="govuk-body-s">About {{distance .DistanceKM}} from your location.</p>{{end}}
+        {{if .Guidance}}
+        <h4 class="govuk-heading-s">What to do</h4>
+        <ol class="govuk-list govuk-list--number">
+          {{range .Guidance}}<li>{{.}}</li>{{end}}
+        </ol>
+        {{end}}
+        <p class="govuk-body-s govuk-!-margin-bottom-0"><strong class="govuk-!-font-weight-bold">Source:</strong> {{.Source}}{{if .Official}} (official){{end}}</p>
+      </div>
+    </article>
+    {{end}}
+  </div>
+  {{else}}
+  <p class="govuk-body">There are no active alerts matching your location. Check again later or clear the location filter.</p>
+  {{end}}
+</section>
+{{end}}
